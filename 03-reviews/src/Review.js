@@ -32,8 +32,11 @@ const Review = () => {
 
   const  randomPerson=()=>{
    let randomNumber = Math.floor(Math.random()* people.length);
-   console.log(randomNumber);
-   return setIndex(randomNumber);
+   //console.log(randomNumber);
+   if (randomNumber === index){
+     randomNumber= index +1;
+   }// makes sure random number doesn't repeat
+   return setIndex(checkNumber(randomNumber));
   }
 
   return <article className="review">
