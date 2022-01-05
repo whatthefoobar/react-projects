@@ -3,30 +3,46 @@ import List from "./List";
 import Alert from "./Alert";
 
 function App() {
-  const [name, setNames] = useState("");
+  const [name, setName] = useState("");
   const [list, setList] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [alert, setAlert] = useState({ show: false, msg: "", type: "" });
+  const [alert, setAlert] = useState({
+    show: false,
+    msg: "",
+    type: "",
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name) {
       //display alert
+      // setAlert({ show: true, msg: "please enter value", type: "danger" });
+      showAlert(true, "danger", "please enter value");
     } else if (name && isEditing) {
       //deal with edit
     } else {
       //show alert
+      showAlert(true, "success", "item added to the list");
       const newItem = { id: new Date().getTime().toString(), title: name };
       setList([...list, newItem]);
-      setNames("");
+      setName("");
     }
+  };
+
+  const showAlert = (show = false, type = "", msg = "") => {
+    setAlert({ show, type, msg }); // show:show
+  };
+
+  const clearList = () => {
+    showAlert(true, "danger", "empty list");
+    setList([]);
   };
 
   return (
     <section className="section-center">
       <form className="grocery-form" onSubmit={handleSubmit} action="">
-        {alert.show && <Alert />}
+        {alert.show && <Alert {...alert} removeAlert={showAlert} />}
         <h3>Grocery Bud</h3>
         <div className="form-control">
           <input
@@ -35,7 +51,7 @@ function App() {
             placeholder="e.g. eggs"
             value={name}
             onChange={(e) => {
-              setNames(e.target.value);
+              setName(e.target.value);
             }}
           />
           <button type="submit" className="submit-btn">
@@ -46,7 +62,9 @@ function App() {
       {list.length > 0 && (
         <div className="grocery-container">
           <List items={list} />
-          <button className="clear-btn">clear items</button>
+          <button className="clear-btn" onClick={clearList}>
+            clear items
+          </button>
         </div>
       )}
     </section>
